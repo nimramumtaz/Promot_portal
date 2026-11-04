@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prompt Engineering Competition | AI Video Generation Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0f1a;--bg2:#10162a;--card:#141b30;--line:#252e4d;--text:#e8ecf8;--mut:#9aa6c8;--blue:#2563eb;--blue2:#3b82f6;--light:#7db0ff}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+a{color:var(--blue2)}:focus-visible{outline:3px solid var(--light);outline-offset:2px}
+.w{max-width:1100px;margin:0 auto;padding:0 24px}section{padding:90px 0}
+h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px;line-height:1.15}
+.lead{color:var(--mut);max-width:62ch;margin-bottom:34px}
+header{position:fixed;inset:0 0 auto;z-index:30;background:rgba(11,15,26,.78);backdrop-filter:blur(10px)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{font-weight:900;font-size:1.3rem;color:#fff;text-decoration:none;letter-spacing:-.01em}.logo b{color:var(--blue2)}
+nav{display:flex;gap:34px;align-items:center}nav a{color:#fff;text-decoration:none;font-weight:600;font-size:.98rem;padding:4px 0;border-bottom:2px solid transparent}
+nav a:hover,nav a.on{border-color:var(--blue2);color:var(--blue2)}
+.btn{display:inline-block;border:0;cursor:pointer;font:700 1rem Inter,sans-serif;color:#fff;background:var(--blue);padding:14px 30px;border-radius:12px;text-decoration:none;transition:background .2s}
+.btn:hover{background:#1d4fd8}.btn.out{background:rgba(255,255,255,.06);border:1.5px solid #ffffff55}.btn.out:hover{background:rgba(255,255,255,.14)}
+nav .btn{padding:11px 22px;font-size:.95rem}.menu{display:none;background:none;color:#fff;border:1.5px solid #ffffff55;border-radius:8px;padding:6px 12px;font:600 .9rem Inter}
+.hero{min-height:100vh;display:flex;align-items:center;text-align:center;padding:120px 0 80px;
+background:linear-gradient(rgba(11,15,26,.55),rgba(11,15,26,.82) 70%,var(--bg)),url(images/hero.jpg) center/cover,radial-gradient(circle at 50% 30%,#1b2d63,#0b0f1a 70%)}
+.hero h1{font-size:clamp(3rem,10vw,7.5rem);font-weight:900;letter-spacing:-.04em;line-height:.95}.hero h1 b{color:var(--blue2)}
+.pill{display:inline-block;margin:30px 0 24px;padding:12px 26px;border-radius:999px;border:1px solid #ffffff30;background:rgba(20,27,48,.8);font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:#cdd6f5}
+.hero p{font-size:clamp(1.1rem,2.3vw,1.6rem);max-width:30em;margin:0 auto 34px;font-weight:500}.hero p span{color:var(--light)}
+.cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:start}
+.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px}
+.box li{list-style:none;display:flex;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}.box li:last-child{border:0}.box li span{color:var(--mut)}.box li b{text-align:right}
+.alt{background:var(--bg2);border-block:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden}
+th,td{padding:16px 20px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}th{width:190px;color:var(--light)}tr:last-child>*{border:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.grid>div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}.grid h3{font-size:1.1rem;margin-bottom:6px;color:#fff}.grid p{color:var(--mut);font-size:.96rem}
+.grid.j>div{border-top:3px solid var(--blue2)}
+.fair{margin-top:34px;border:1px solid var(--line);border-left:4px solid var(--blue2);border-radius:14px;padding:26px 30px;background:var(--card)}.fair ul{padding-left:20px;color:var(--mut);margin-top:8px}
+.reg{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start}
+form,.side{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:32px}.side{position:sticky;top:92px}
+fieldset{border:0;padding:0;margin:0 0 24px}legend{font-weight:800;font-size:1.15rem;margin-bottom:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.f{margin-bottom:16px}
+label{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}label small{color:var(--mut);font-weight:400}
+input[type=text],input[type=email],input[type=tel],select{width:100%;font:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:#0d1224;color:#fff}
+input:focus,select:focus{border-color:var(--blue2);outline:3px solid #3b82f633}.bad input,.bad select{border-color:#ff6b5b}
+.err{display:none;color:#ff8a7a;font-size:.85rem;margin-top:5px}.bad .err{display:block}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choice label{margin:0;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;display:flex;gap:10px;font-weight:500}
+.choice label:has(input:checked){border-color:var(--blue2);background:#1a2a55}.choice b{display:block}
+.tools{display:flex;flex-wrap:wrap;gap:8px}.tools label{margin:0;border:1.5px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer;font-weight:500;font-size:.92rem}
+.tools label:has(input:checked){background:var(--blue);border-color:var(--blue)}.tools input{position:absolute;opacity:0}.tools label:has(input:focus-visible){outline:3px solid var(--light)}
+.agree{display:flex;gap:10px;font-weight:500;font-size:.94rem}.agree input{width:18px;height:18px;margin-top:5px;flex:none}
+form .btn{width:100%;font-size:1.05rem;margin-top:8px}#team{display:none}#team.on{display:block}
+.fee{font-size:2.7rem;font-weight:900}.side ol{padding-left:20px;margin:14px 0 18px;color:var(--mut);font-size:.95rem}.side li{margin-bottom:6px}
+.pay{background:#0d1224;border-radius:12px;padding:14px 16px;font-size:.92rem}.pay div{display:flex;justify-content:space-between;gap:10px;padding:3px 0}.pay span{color:var(--mut)}
+.fail{display:none;background:#3a1620;border:1px solid #7a2a3a;color:#ffb3bd;border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:.92rem}
+.ok{display:none;text-align:center;padding:50px 30px;background:var(--card);border:1px solid var(--line);border-radius:18px}
+.ok code{display:inline-block;background:#0d1224;padding:8px 20px;border-radius:8px;font-size:1.4rem;font-weight:800;margin:14px 0;color:var(--light)}.ok p{color:var(--mut);max-width:44ch;margin:0 auto 12px}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:12px}
+summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}summary::-webkit-details-marker{display:none}summary:after{content:"+";color:var(--blue2);font-size:1.4rem;line-height:1}details[open] summary:after{content:"\2212"}details p{color:var(--mut);margin-top:10px}
+footer{border-top:1px solid var(--line);padding:34px 0;color:var(--mut);font-size:.92rem}footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+@media(max-width:900px){.two,.reg{grid-template-columns:1fr}.side{position:static;order:-1}}
+@media(max-width:760px){section{padding:64px 0}.menu{display:block}
+nav{position:absolute;top:72px;left:0;right:0;background:#0b0f1a;flex-direction:column;align-items:flex-start;padding:20px 24px;gap:16px;display:none}nav.open{display:flex}
+.row,.choice{grid-template-columns:1fr}form,.side{padding:22px 18px}th,td{display:block;width:auto;border:0;padding:6px 18px}th{padding-top:16px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style></head><body>
+<header><div class="w nav">
+<a class="logo" href="#top"><b>P</b>ROMPT&nbsp;ENGINEERING</a>
+<button class="menu" id="mb" aria-expanded="false" aria-controls="nv">Menu</button>
+<nav id="nv" aria-label="Main"><a class="on" href="#top">Home</a><a href="#challenge">Challenge</a><a href="#rules">Rules</a><a href="#judging">Judging</a><a href="#faq">FAQ</a><a class="btn" href="#register">Register Now</a></nav>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="w">
+<h1><b>P</b>ROMPT<br>ENGINEERING</h1>
+<div class="pill">120 minutes &bull; Up to 2 members &bull; PKR 1,000</div>
+<p>AI Video Generation Challenge. <span>One scenario, one brief, 120 minutes to turn your prompts into a finished MP4.</span></p>
+<div class="cta"><a class="btn" href="#register">Register Now</a><a class="btn out" href="#challenge">Explore Challenge</a></div>
+</div></section>
+
+<section id="challenge"><div class="w two">
+<div><h2>The challenge</h2>
+<p class="lead">Generate an original AI video that follows the scenario, reference images and instructions released by the organizers at the start of the competition.</p>
+<p style="color:var(--mut)">Judges score your prompt engineering, scenario accuracy, visual quality and creativity. Bring your laptop and your own AI tool accounts.</p></div>
+<ul class="box" aria-label="Event details">
+<li><span>Format</span><b>AI video generation</b></li><li><span>Time limit</span><b>120 minutes</b></li><li><span>Team size</span><b>Individual or up to 2</b></li><li><span>Registration fee</span><b>PKR 1,000</b></li><li><span>Date</span><b data-c="date">To be announced</b></li><li><span>Venue</span><b data-c="venue">To be announced</b></li></ul>
+</div></section>
+
+<section id="rules" class="alt"><div class="w">
+<h2>Participation and tools</h2><p class="lead">What you can bring, use and arrange yourself.</p>
+<table>
+<tr><th scope="row">Participation</th><td>Individual entry or a team of maximum two members; PKR 1,000 registration fee.</td></tr>
+<tr><th scope="row">Time limit</th><td>Exactly 120 minutes, including generation, editing and submission.</td></tr>
+<tr><th scope="row">Devices</th><td>Students may bring and use their own laptops.</td></tr>
+<tr><th scope="row">AI platforms</th><td>Free, Pro and Premium tools are allowed, for example Runway, Kling, Pika, Sora, CapCut and Flow.</td></tr>
+<tr><th scope="row">Prompt support</th><td>AI assistants such as ChatGPT, Gemini and Claude, and editing software, are allowed.</td></tr>
+<tr><th scope="row">Access</th><td>Participants arrange their own tool accounts, credits and subscriptions.</td></tr></table>
+<h2 style="margin-top:64px">Video and prompt requirements</h2><p class="lead">Your video is checked against these points.</p>
+<div class="grid">
+<div><h3>Follow the brief</h3><p>Use the provided story, scene instructions and required visual elements, and use the supplied images appropriately.</p></div>
+<div><h3>Prompt with structure</h3><p>Write clear, structured prompts and refine them to improve motion, continuity and visual consistency.</p></div>
+<div><h3>Create it live</h3><p>Make the video during the competition. Previously completed videos cannot be submitted.</p></div>
+<div><h3>Submit a playable MP4</h3><p>Length, aspect ratio and any extra conditions will be stated in the task.</p></div>
+<div><h3>AI is the core</h3><p>Editing, audio and subtitles are allowed, but AI generation must form the core video content.</p></div></div>
+</div></section>
+
+<section id="judging"><div class="w">
+<h2>How you will be judged</h2><p class="lead">Four things decide the result. The judges' evaluation decision is final.</p>
+<div class="grid j">
+<div><h3>Prompt engineering</h3><p>How clear, structured and refined your prompts are.</p></div>
+<div><h3>Scenario accuracy</h3><p>How closely the video follows the story and required elements.</p></div>
+<div><h3>Visual quality</h3><p>Motion, continuity and consistency.</p></div>
+<div><h3>Creativity</h3><p>What you add to the brief that others did not.</p></div></div>
+<div class="fair"><h3>Fair play</h3><p style="color:var(--mut)">Judges may inspect prompts and verify your work.</p>
+<ul><li>Do not copy another team's prompts or work.</li><li>Do not fabricate generation evidence.</li><li>Do not include unauthorized or harmful content.</li></ul></div>
+</div></section>
+
+<section id="register" class="alt"><div class="w">
+<h2>Register for the challenge</h2><p class="lead">Pay the PKR 1,000 fee, fill in the form and add your transaction ID. You get a registration ID instantly.</p>
+<div class="reg"><div>
+<form id="rf" novalidate>
+<div class="fail" id="fail" role="alert"></div>
+<fieldset><legend>Entry type</legend><div class="choice">
+<label><input type="radio" name="entryType" value="Individual" checked><span><b>Individual</b>Compete on your own</span></label>
+<label><input type="radio" name="entryType" value="Team of 2"><span><b>Team of 2</b>Compete with a partner</span></label></div></fieldset>
+<fieldset><legend>Participant 1</legend>
+<div class="row"><div class="f"><label for="name1">Full name</label><input type="text" id="name1" autocomplete="name"><div class="err">Enter your full name.</div></div>
+<div class="f"><label for="roll1">Roll number or student ID</label><input type="text" id="roll1"><div class="err">Enter your roll number or ID.</div></div></div>
+<div class="row"><div class="f"><label for="email1">Email</label><input type="email" id="email1" autocomplete="email"><div class="err">Enter a valid email address.</div></div>
+<div class="f"><label for="phone1">WhatsApp number</label><input type="tel" id="phone1" placeholder="03XX XXXXXXX"><div class="err">Enter a valid number, e.g. 03001234567.</div></div></div>
+<div class="f"><label for="institute">University or institute</label><input type="text" id="institute"><div class="err">Enter your university or institute.</div></div></fieldset>
+<fieldset id="team"><legend>Participant 2</legend>
+<div class="row"><div class="f"><label for="name2">Full name</label><input type="text" id="name2"><div class="err">Enter your partner's name.</div></div>
+<div class="f"><label for="roll2">Roll number or student ID</label><input type="text" id="roll2"><div class="err">Enter your partner's roll number.</div></div></div>
+<div class="row"><div class="f"><label for="email2">Email</label><input type="email" id="email2"><div class="err">Enter a valid email address.</div></div>
+<div class="f"><label for="phone2">WhatsApp number</label><input type="tel" id="phone2" placeholder="03XX XXXXXXX"><div class="err">Enter a valid number.</div></div></div>
+<div class="f"><label for="teamName">Team name <small>(optional)</small></label><input type="text" id="teamName"></div></fieldset>
+<fieldset><legend>AI tools you plan to use <small style="font-weight:400">(optional)</small></legend><div class="tools">
+<label><input type="checkbox" value="Runway">Runway</label><label><input type="checkbox" value="Kling">Kling</label><label><input type="checkbox" value="Pika">Pika</label><label><input type="checkbox" value="Sora">Sora</label><label><input type="checkbox" value="Flow">Flow</label><label><input type="checkbox" value="CapCut">CapCut</label><label><input type="checkbox" value="Other">Other</label></div></fieldset>
+<fieldset><legend>Payment of PKR 1,000</legend><div class="row">
+<div class="f"><label for="payMethod">Payment method</label><select id="payMethod"><option value="">Select a method</option><option>Bank transfer</option><option>JazzCash</option><option>Easypaisa</option><option>Cash at the registration desk</option></select><div class="err">Select how you paid.</div></div>
+<div class="f" id="trxBox"><label for="transactionId">Transaction ID</label><input type="text" id="transactionId"><div class="err">Enter the transaction ID from your receipt.</div></div></div></fieldset>
+<div class="f" id="agBox"><label class="agree"><input type="checkbox" id="agree"><span>I have read the rules. I will create the video during the competition and will not copy another team's work.</span></label><div class="err">Accept the rules to register.</div></div>
+<button class="btn" type="submit" id="sb">Submit registration</button></form>
+<div class="ok" id="ok" role="status"><h2>You are registered</h2><p>Keep this ID. You need it at check-in.</p><code id="rid"></code><p id="om"></p><button class="btn" onclick="print()">Print confirmation</button></div>
+</div>
+<aside class="side" aria-label="Fee and payment"><div class="fee">PKR 1,000</div><p style="color:var(--mut)">per entry, solo or team of two</p>
+<ol><li>Pay using one of the accounts below.</li><li>Keep your receipt and note the transaction ID.</li><li>Complete the form.</li></ol>
+<div class="pay"><div><span>Account title</span><b data-c="accTitle">Shared soon</b></div><div><span>Bank / wallet</span><b data-c="accBank">Shared soon</b></div><div><span>Account number</span><b data-c="accNo">Shared soon</b></div></div>
+<p style="margin-top:14px;font-size:.92rem;color:var(--mut)">Questions? <a id="mail" href="#register">Contact the organizers</a></p></aside>
+</div></div></section>
+
+<section id="faq"><div class="w" style="max-width:820px"><h2>Common questions</h2><p class="lead">Quick answers before you register.</p>
+<details><summary>Can I enter alone?</summary><p>Yes. Enter individually or with one partner. A team has at most two members.</p></details>
+<details><summary>Do I need to pay for AI tools?</summary><p>Free, Pro and Premium tools are allowed. You arrange your own accounts, credits and subscriptions.</p></details>
+<details><summary>Can I use ChatGPT, Gemini or Claude for prompts?</summary><p>Yes. AI assistants and editing software are allowed, but AI generation must form the core of the video.</p></details>
+<details><summary>Can I submit a video I made earlier?</summary><p>No. The video must be created during the 120 minutes.</p></details>
+<details><summary>What do I submit?</summary><p>A playable MP4. Length, aspect ratio and other conditions are given in the task. Audio and subtitles are allowed.</p></details>
+</div></section></main>
+
+<footer><div class="w"><span>Prompt Engineering Competition &bull; AI Video Generation Challenge</span><a href="admin.html">Admin</a></div></footer>
+
+<script>
+const CONFIG={date:"",venue:"",email:"",accTitle:"",accBank:"",accNo:""}; // edit these
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+$$("[data-c]").forEach(e=>{if(CONFIG[e.dataset.c])e.textContent=CONFIG[e.dataset.c]});
+if(CONFIG.email)$("#mail").href="mailto:"+CONFIG.email;
+$("#mb").onclick=()=>$("#mb").setAttribute("aria-expanded",$("#nv").classList.toggle("open"));
+$("#nv").onclick=e=>{if(e.target.tagName=="A")$("#nv").classList.remove("open")};
+const rf=$("#rf"),isTeam=()=>rf.entryType.value=="Team of 2",cash=()=>$("#payMethod").value.startsWith("Cash");
+$$("[name=entryType]").forEach(r=>r.onchange=()=>$("#team").classList.toggle("on",isTeam()));
+$("#payMethod").onchange=()=>$("#trxBox").style.display=cash()?"none":"";
+const eOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),pOk=v=>/^(\+?92|0)?3\d{9}$/.test(v.replace(/[\s-]/g,""));
+const mark=(el,ok)=>{(el.closest(".f")).classList.toggle("bad",!ok);return ok};
+function validate(){let bad=[];const c=(id,ok)=>{if(!mark($("#"+id),ok))bad.push(id)};
+["name1","roll1","institute","payMethod"].forEach(i=>c(i,$("#"+i).value.trim()!==""));
+c("email1",eOk($("#email1").value.trim()));c("phone1",pOk($("#phone1").value));
+if(isTeam()){["name2","roll2"].forEach(i=>c(i,$("#"+i).value.trim()!==""));c("email2",eOk($("#email2").value.trim()));c("phone2",pOk($("#phone2").value))}
+if(!cash())c("transactionId",$("#transactionId").value.trim().length>=4);
+c("agree",$("#agree").checked);if(bad.length)$("#"+bad[0]).focus();return!bad.length}
+rf.addEventListener("input",e=>e.target.closest(".f")?.classList.remove("bad"));
+rf.addEventListener("submit",async e=>{e.preventDefault();const fl=$("#fail");fl.style.display="none";if(!validate())return;
+const b=$("#sb");b.disabled=true;b.textContent="Submitting...";
+const g=id=>$("#"+id).value.trim(),body={entryType:rf.entryType.value,agree:$("#agree").checked,tools:$$(".tools input:checked").map(c=>c.value)};
+["name1","roll1","email1","phone1","institute","payMethod","transactionId","name2","roll2","email2","phone2","teamName"].forEach(k=>body[k]=g(k));
+try{const r=await fetch("/api/register",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)}),d=await r.json();
+if(!r.ok)throw new Error((d.errors||["Something went wrong."]).join(" "));
+$("#rid").textContent=d.id;$("#om").textContent="The organizers will verify your payment and contact "+body.email1+".";
+rf.style.display="none";$("#ok").style.display="block";$("#ok").scrollIntoView({behavior:"smooth",block:"center"})}
+catch(err){fl.textContent=err.message.startsWith("Failed")?"Could not reach the server. Check that it is running and try again.":err.message;fl.style.display="block";b.disabled=false;b.textContent="Submit registration"}});
+</script></body></html>

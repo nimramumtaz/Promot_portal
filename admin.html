@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin | PEC Registrations</title>
+<style>
+body{font-family:Inter,system-ui,sans-serif;background:#0b0f1a;color:#e8ecf8;margin:0;padding:28px}
+h1{margin:0 0 16px}button,input,select{font:inherit;padding:10px 14px;border-radius:8px;border:1px solid #2a3350;background:#141a2b;color:#fff}
+button{background:#2563eb;border:0;cursor:pointer;font-weight:700}.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{padding:10px 12px;border-bottom:1px solid #222a44;text-align:left;white-space:nowrap}th{color:#93a0c8}
+</style></head><body>
+<h1>Registrations <span id="count" style="color:#93a0c8;font-size:1rem"></span></h1>
+<div class="bar"><input type="password" id="pw" placeholder="Admin password"><button id="load">Load</button><button id="csv">Download CSV</button><span id="msg" style="color:#ff8a7a"></span></div>
+<div class="wrap"><table><thead><tr><th>ID</th><th>Type</th><th>Participant 1</th><th>Contact</th><th>Participant 2</th><th>Institute</th><th>Payment</th><th>Status</th></tr></thead><tbody id="rows"></tbody></table></div>
+<script>
+const $=s=>document.querySelector(s),H=()=>({'x-admin-password':$('#pw').value});
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function load(){$('#msg').textContent='';const r=await fetch('/api/admin/registrations',{headers:H()});
+ if(!r.ok){$('#msg').textContent='Wrong password.';return}const d=await r.json();$('#count').textContent='('+d.length+')';
+ $('#rows').innerHTML=d.map(x=>`<tr><td>${esc(x.id)}</td><td>${esc(x.entryType)}</td><td>${esc(x.name1)}<br><small>${esc(x.roll1)}</small></td><td>${esc(x.email1)}<br><small>${esc(x.phone1)}</small></td><td>${esc(x.name2)||'-'}</td><td>${esc(x.institute)}</td><td>${esc(x.payMethod)}<br><small>${esc(x.transactionId)}</small></td>
+ <td><select data-id="${esc(x.id)}">${['Pending payment check','Payment verified','Rejected'].map(s=>`<option${s===x.status?' selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')}
+$('#load').onclick=load;
+$('#rows').onchange=e=>fetch('/api/admin/registrations/'+e.target.dataset.id,{method:'PATCH',headers:{...H(),'Content-Type':'application/json'},body:JSON.stringify({status:e.target.value})});
+$('#csv').onclick=async()=>{const r=await fetch('/api/admin/export.csv',{headers:H()});if(!r.ok){$('#msg').textContent='Wrong password.';return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(await r.blob());a.download='registrations.csv';a.click()};
+</script></body></html>
